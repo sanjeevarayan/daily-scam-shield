@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Money & Scam Shield</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background: #0f172a; color: #f8fafc; margin: 0; padding: 16px; display: flex; justify-content: center; }
+    .app { width: 100%; max-width: 420px; background: #1e293b; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    h1 { font-size: 19px; margin: 0; color: #38bdf8; }
+    .streak { background: #451a03; color: #fbbf24; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; border: 1px solid #f59e0b; }
+    .sub { font-size: 12px; color: #94a3b8; margin-bottom: 16px; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .tab { flex: 1; padding: 10px; border: none; border-radius: 10px; background: #334155; color: #cbd5e1; font-weight: 600; cursor: pointer; }
+    .tab.active { background: #0284c7; color: #fff; }
+    .card { background: #0f172a; padding: 14px; border-radius: 14px; margin-bottom: 14px; }
+    .row-between { display: flex; justify-content: space-between; align-items: center; }
+    .balance { font-size: 26px; font-weight: bold; color: #4ade80; margin-top: 4px; }
+    .progress-bg { width: 100%; height: 8px; background: #1e293b; border-radius: 10px; margin-top: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #22c55e; width: 0%; transition: 0.3s; }
+    input, select, textarea { width: 100%; padding: 10px; margin-top: 8px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #fff; font-size: 14px; }
+    button.primary { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 10px; background: #22c55e; color: #052e16; font-weight: bold; font-size: 15px; cursor: pointer; }
+    button.danger { background: #f59e0b; color: #451a03; }
+    button.small-btn { background: #334155; color: #e2e8f0; border: none; padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; }
+    .item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1e293b; font-size: 14px; }
+    .del-btn { background: none; border: none; color: #f87171; cursor: pointer; font-size: 14px; margin-left: 8px; }
+    .ad-box { background: #334155; border: 1px dashed #64748b; text-align: center; padding: 10px; border-radius: 10px; font-size: 12px; color: #cbd5e1; margin-top: 12px; }
+    .result { margin-top: 12px; padding: 12px; border-radius: 10px; font-size: 14px; display: none; line-height: 1.4; }
+    .safe { background: #064e3b; color: #6ee7b7; border: 1px solid #10b981; }
+    .scam { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef4444; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <h1>🛡️ Daily Money & Scam Shield</h1>
+      <div class="streak" id="streakBadge">🔥 1 Day</div>
+    </div>
+    <div class="sub">Smart Expense Tracker + Instant Fraud Guard</div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('expense', this)">💰 Daily Expense</button>
+      <button class="tab" onclick="showTab('scam', this)">🔍 Scam Shield</button>
+    </div>
+
+    <!-- EXPENSE TAB -->
+    <div id="expense">
+      <div class="card">
+        <div class="row-between">
+          <span style="font-size:12px;color:#94a3b8;">Total Selavu / Monthly Budget</span>
+          <button class="small-btn" onclick="setBudget()">Set Budget</button>
+        </div>
+        <div class="balance" id="total">₹0 / ₹5000</div>
+        <div class="progress-bg"><div class="progress-fill" id="bar"></div></div>
+        <div id="budgetAlert" style="font-size:12px;color:#fbbf24;margin-top:6px;"></div>
+      </div>
+
+      <div class="card">
+        <input type="text" id="desc" placeholder="Enna selavu? (e.g., Tea, Bus, Recharge)" />
+        <input type="number" id="amt" placeholder="Amount (₹)" />
+        <select id="cat">
+          <option value="☕ Food & Tea">☕ Food & Tea</option>
+          <option value="🚌 Travel">🚌 Travel</option>
+          <option value="🛍️ Shopping">🛍️ Shopping</option>
+          <option value="📲 Bills / UPI">📲 Bills / UPI</option>
+        </select>
+        <button class="primary" onclick="addExpense()">+ Add Expense</button>
+      </div>
+
+      <div class="card">
+        <div style="font-size:13px;font-weight:bold;margin-bottom:6px;">Recent Transactions</div>
+        <div id="list"></div>
+      </div>
+    </div>
+
+    <!-- SCAM SHIELD TAB -->
+    <div id="scam" class="hidden">
+      <div class="card">
+        <div style="font-size:13px;color:#cbd5e1;">Suspicious SMS, WhatsApp message, or Link-ah keela paste pannunga:</div>
+        <textarea id="msg" rows="4" placeholder="Example: Dear customer your bank KYC is pending. Click bit.ly/kyc-update..."></textarea>
+        <button class="primary danger" onclick="checkScam()">🛡️ Scan for Scam</button>
+        <div id="scamResult" class="result"></div>
+      </div>
+    </div>
+
+    <!-- AD PLACEHOLDER -->
+    <div class="ad-box">
+      📢 Google AdMob Banner Space (Income Area)
+    </div>
+  </div>
+
+  <script>
+    let expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+    let budget = Number(localStorage.getItem('budget') || 5000);
+
+    function showTab(tab, btn) {
+      document.getElementById('expense').classList.add('hidden');
+      document.getElementById('scam').classList.add('hidden');
+      document.getElementById(tab).classList.remove('hidden');
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function setBudget() {
+      const val = prompt('Un Monthly Budget evlo? (₹)', budget);
+      if (val && Number(val) > 0) {
+        budget = Number(val);
+        localStorage.setItem('budget', budget);
+        render();
+      }
+    }
+
+    function deleteExpense(realIdx) {
+      expenses.splice(realIdx, 1);
+      localStorage.setItem('expenses', JSON.stringify(expenses));
+      render();
+    }
+
+    function render() {
+      const list = document.getElementById('list');
+      list.innerHTML = '';
+      let sum = 0;
+      expenses.forEach(e => sum += Number(e.amt));
+
+      for (let i = expenses.length - 1; i >= 0; i--) {
+        const e = expenses[i];
+        list.innerHTML += `<div class="item"><span>${e.cat}: ${e.desc}</span><div><b>₹${e.amt}</b><button class="del-btn" onclick="deleteExpense(${i})">✕</button></div></div>`;
+      }
+
+      document.getElementById('total').innerText = `₹${sum} / ₹${budget}`;
+      const pct = Math.min((sum / budget) * 100, 100);
+      const bar = document.getElementById('bar');
+      bar.style.width = pct + '%';
+      bar.style.background = pct >= 80 ? '#ef4444' : '#22c55e';
+
+      const alertBox = document.getElementById('budgetAlert');
+      if (pct >= 100) alertBox.innerText = '🚨 Budget limit thaandiduchu! Selava kammi pannunga.';
+      else if (pct >= 80) alertBox.innerText = '⚠️ Careful! 80% budget use panniteenga.';
+      else alertBox.innerText = '';
+    }
+
+    function addExpense() {
+      const desc = document.getElementById('desc').value.trim();
+      const amt = document.getElementById('amt').value;
+      const cat = document.getElementById('cat').value;
+      if (!desc || !amt) return alert('Description & Amount enter pannunga!');
+      expenses.push({ desc, amt, cat });
+      localStorage.setItem('expenses', JSON.stringify(expenses));
+      document.getElementById('desc').value = '';
+      document.getElementById('amt').value = '';
+      render();
+    }
+
+    function checkScam() {
+      const text = document.getElementById('msg').value.toLowerCase();
+      const res = document.getElementById('scamResult');
+      if (!text) return alert('Message or link paste pannunga!');
+      const redFlags = ['won', 'lottery', 'upi pin', 'kyc', 'blocked', 'bit.ly', 'tinyurl', 'apk', 'urgent', 'prize', 'refund', 'otp', 'credit card', 'free gift', 'part time job', 'work from home'];
+      const hits = redFlags.filter(word => text.includes(word));
+      res.style.display = 'block';
+      if (hits.length > 0) {
+        res.className = 'result scam';
+        res.innerHTML = `⚠️ <b>HIGH SCAM ALERT!</b><br>Fraud keywords found: <b>${hits.join(', ')}</b>.<br>Indha link click pannadheenga & OTP/UPI PIN share pannadheenga!`;
+      } else {
+        res.className = 'result safe';
+        res.innerHTML = `✅ <b>Looks Safe!</b><br>Common fraud patterns illa. Aanaalum unknown numbers-la irundhu varra links-la careful-ah irunga.`;
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
