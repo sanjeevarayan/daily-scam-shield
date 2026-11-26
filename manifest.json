@@ -1,0 +1,15 @@
+{
+  "name": "Daily Money & Scam Shield",
+  "short_name": "Scam Shield",
+  "start_url": "/daily-scam-shield/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0284c7",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1161/1161388.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
