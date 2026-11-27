@@ -160,8 +160,9 @@
       const text = document.getElementById('msg').value.toLowerCase();
       const res = document.getElementById('scamResult');
       if (!text) return alert('Message or link paste pannunga!');
-      const redFlags = ['won', 'lottery', 'upi pin', 'kyc', 'blocked', 'bit.ly', 'tinyurl', 'apk', 'urgent', 'prize', 'refund', 'otp', 'credit card', 'free gift', 'part time job', 'work from home'];
-      const hits = redFlags.filter(word => text.includes(word));
+     const redFlags = ['won', 'lottery', 'upi pin', 'kyc', 'blocked', 'bit.ly', 'tinyurl', 'apk', 'urgent', 'prize', 'refund', 'otp', 'credit card', 'free gift', 'part time job', 'work from home'];
+      const allFlags = [...redFlags, 'blogspot', 'offer', 'win', 'free', 'gift'];
+      const hits = allFlags.filter(word => text.includes(word));
       res.style.display = 'block';
       if (hits.length > 0) {
         res.className = 'result scam';
